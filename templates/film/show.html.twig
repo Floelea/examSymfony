@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Film{% endblock %}
+{% form_theme formImpression 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+
+    <h2 class="m-5">Film</h2>
+
+
+        <div class="card text-white bg-secondary mb-3 ms-5 " style="max-width:900px;">
+            <div class="card-header"><p>Film de {{ film.director }} , Date de sortie : {{ film.createdAt|date('d/m/Y') }}</p>
+                <p>Film proposé par : {{ film.user.username }}</p>
+            </div>
+            <div class="card-body">
+                <div>
+                    <img src="{{ vich_uploader_asset(film,'imageFile') }}" alt="">
+                </div>
+                <h4 class="card-title">{{ film.name }}</h4>
+                <p class="card-text">{{ film.resume}}</p>
+                {% if app.user %}
+                    <a href="{{ path('like',{id:film.id}) }}" class=" like btn btn-{% if (film.isLikedBy(app.user)) %}success{% else %}secondary{% endif %}">Like:<span class="count">{{ film.likes|length }}</span></a>
+                {% else %}
+                    <p class="ms-3">Like:{{ film.likes|length }}</p>
+                {% endif %}
+            </div>
+            <div>
+
+                {% if app.user == film.user %}
+                <a href="{{ path('delete_film',{id:film.id}) }}" class="btn btn-danger">Delete</a>
+                <a href="{{ path('edit_film',{id:film.id}) }}" class="btn btn-warning">Edit</a>
+                {% endif %}
+
+            </div>
+        </div>
+
+
+        {% if app.user %}
+                    {{ form_start(formImpression,{action:path('new_impression',{id:film.id}),'attr': {'style':'max-width: 900px','class':'ms-5 mb-3'} } ) }}
+                    {{ form_row(formImpression.content) }}
+                    <button type="submit" class="btn">Comment</button>
+                    {{ form_end(formImpression) }}
+        {% else %}
+            <a href="{{ path('signin') }}" class="btn btn-info mb-3 ms-5">Connect to comment</a>
+        {% endif %}
+
+
+
+        <h5 class="m-5">Avis</h5>
+
+        {% for impression in film.impressions %}
+            <div class="card text-white bg-info mb-3 ms-5" style="max-width: 900px;">
+                <div class="card-header"><p>Date: {{ impression.createdAt|date('d/m/Y')}}</p>
+                    <p>Author : {{ impression.user.username }}</p>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">{{ impression.content }}</p>
+                </div>
+                        {% if app.user == impression.user %}
+                    <div class="mb-3 ms-3">
+                        <a href="{{ path('delete_impression',{id:impression.id}) }}" class="btn btn-danger">Delete</a>
+                        <a href="{{ path('edit_impression',{id:impression.id}) }}" class="btn btn-warning">Edit</a>
+
+                    </div>
+                        {% endif %}
+            </div>
+        {% endfor %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded',()=>{
+            const btnLike = document.querySelectorAll('.like');
+            btnLike.forEach((bouton=>{
+                bouton.addEventListener('click',like)
+            }))
+        })
+        function like(e){
+            e.preventDefault();
+            fetch(this.href)
+                .then(reponse=>reponse.json())
+                .then((data)=>{
+                    console.log(data)
+                    this.querySelector('.count').innerHTML = data.count;
+                    if(data.liked){
+                        this.classList.add('btn-success');
+                        this.classList.remove('btn-secondary');
+                    }else{
+                        this.classList.add('btn-secondary');
+                        this.classList.remove('btn-success');
+                    }
+                })
+        }
+
+    </script>
+
+{% endblock %}

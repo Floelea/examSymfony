@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connect{% endblock %}
+
+{% block body %}
+
+    <h4 class="text-center mt-5">Connect</h4>
+
+    <form action="{{ path('signin') }}" method="post" class="container mt-5">
+        <div class="form-group mb-3 ">
+
+            <input type="text" name="_username" class="form-control" placeholder="Username" id="inputDefault">
+        </div>
+        <div class="form-group mb-3">
+
+            <input type="password" name="_password" class="form-control" placeholder="Password" id="inputDefault">
+        </div>
+        <button type="submit" class="btn btn-success">Connect</button>
+    </form>
+{% endblock %}

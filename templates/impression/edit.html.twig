@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Impression{% endblock %}
+{% form_theme formulaireEdit 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+    <h4 class="text-center mt-5">Change your Impression</h4>
+
+    {{ form_start(formulaireEdit, {'attr': {'class':'container'}}) }}
+    {{ form_row(formulaireEdit.content) }}
+    <button type="submit" class="btn">Modifier</button>
+    {{ form_end(formulaireEdit) }}
+
+
+{% endblock %}

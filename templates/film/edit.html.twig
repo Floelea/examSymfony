@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit{% endblock %}
+{% form_theme formulaireEdit 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+    <h4 class="text-center mt-5">Change your Film</h4>
+
+    {{ form_start(formulaireEdit, {'attr': {'class':'container'}}) }}
+    {{ form_row(formulaireEdit.name) }}
+    {{ form_row(formulaireEdit.resume) }}
+    {{ form_row(formulaireEdit.director) }}
+    {{ form_row(formulaireEdit.createdAt) }}
+    <button type="submit" class="btn">Modifier</button>
+    {{ form_end(formulaireEdit) }}
+
+
+{% endblock %}
